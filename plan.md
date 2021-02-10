@@ -49,13 +49,18 @@ also note to self: add some of this stuff to proposal.md.
 
         - Ration size
 
+    and a new function:
+
+        -Change Ration Size
+
     this can be changed by the player at anytime. By default it'll be average, but they can make it smaller or bigger. (I should find good names for the different sizes later and put them here:
-        - (large)
-        - (medium)
-        - (small)
+        - _ (large) (4 pounds)
+        - _ (medium) (3 pounds)
+        - _ (small) (2 pounds)
         )
 
-Reminder to search up how much food an average person eats a day
+~Reminder to search up how much food an average person eats a day~
+3-4 pounds a day
 then again these are aliens so it probably doesnt matter
 speaking of aliens and the party...
 
@@ -63,15 +68,16 @@ speaking of aliens and the party...
 
 It would be nice if you could give them all names, and it probably won't be hard, but it's not important
 
-~I don't remember how many people are in your party in "The Oregon Trail". I should search that up.
-ok its just giving me results for the actual Oregin Trail so~ I'll just make the number 5.
+~I don't remember how many people are in your party in "The Oregon Trail". I should search that up.~
+~ok its just giving me results for the actual Oregin Trail so~ I'll just make the number 5.
 
 ~Party should probably be a variable so I can calculate how much food is eaten every day~
-Nope it should be an array full of objects. Each party member can be an object with things like:
+Nope it should be an array called Party full of objects. Each party member can be an object with things like:
 
 -Health
 -Name
 -isAlive
+-isSick (new addition)
 
 so i can calculate overall party health and how many living party members there are. This will also make changing names easy
 
@@ -79,13 +85,15 @@ So that makes another variable:
 
 -Party Member Count
 
-I'll iterate through the Party array, check the isAlive of the party members, and set the Party Member Count to the amount of living pary members.
+I'll iterate through the Party array, check the isAlive of the party members, and set the Party Member Count to the amount of living patry members.
 
 If the Health of a Party Member reaches zero, they die.
 When they die in a Random Unfortunate Event, the Health will be set to zero
 And diseases and and injuries can be variables that are subtracted from Health every round until they are healed with medicine.
 
-(Problem: how to remove the injury/disease status when medicine is used. Just setting it to full will only work for one round)
+~(Problem: how to remove the injury/disease status when medicine is used. Just setting it to full will only work for one round)~
+Solution: make keep track of whether a party member is sick in their object. All the illnesses and diseases can be the same (i can make them different later if I want)
+
 
 Since party members can get hurt and sick, we probably need medicine.
 I'll add that to the Resources.
@@ -95,12 +103,19 @@ I'll add that to the Resources.
 ~This is gonna be weird since I'm reducing an entire galaxy to a short trip. I should check to see how many light years it would take to travel across the Milky Way~
 PFFFFF 100,000 YEARS AT THE SPEED OF LIGHT?! these aliens fast
 
-"The Oregon Trail" had on average 12 rounds of decision-making, each representing 2 weeks, according to Wikipedia. That makes 168 (about 5 months), so these aliens will have to travel just over *595 light years a day*.
+"The Oregon Trail" had on average 12 rounds of decision-making, each representing 2 weeks, according to Wikipedia. That makes 168 days (about 5 months), so these aliens will have to travel just over *595 light years a day*.
 
-I'll make the amount of light years travelled a day a random number between 450 and 750. I'll make a function that decides how far they travel each day, and that function will change the value of a variable (distanceTraveledToday). Then this will be added to another variable that keeps track of the total distance travelled. If the total distance traveled is less than 100000 (the lenghth of the journey), another round starts.
+There should also be an option to change the pace to go faster or slower. This should be a variable called pace:
+
+- Grueling (fast)
+- forgot the name (medium)
+- (slow)
+
+I'll make the amount of light years travelled a day depend on this variable. I'll make a function that decides how far they travel each day, and that function will change the value of a variable (distanceTraveledToday). Then this will be added to another variable that keeps track of the total distance travelled. After 2 weeks, if the total distance traveled is less than 100000 (the lenghth of the journey), another round starts.
 
 so 2 variables:
-- disctance travelled today
+- pace
+- distance travelled today
 - distance travelled in total
 
 and 3 functions:
@@ -115,5 +130,6 @@ This way the game will vary in length each time you play, and it also makes it a
 Ideas for Random Unfortunate Events:
 1. getting hit by an asteroid (damages spaceship, may injure someone, may kill someone)
 2. getting stuck in an asteroid belt (slows you down because you have to dodge them, may result in 1.)
-3. someone randomly gets sick (applies an illness that subtracts from health every day until death or until cured)
+3. someone randomly gets sick or hurt (applies an illness that subtracts from health every day until death or until cured)
 4. resources drift off the spaceship when someone left the door open (a resource besides money is subtracted from)
+5. Space cow eats your food (lose random amount of food)
