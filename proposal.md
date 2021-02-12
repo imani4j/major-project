@@ -5,6 +5,7 @@ This game will feature aliens travelling through the Milky way to get to Earth. 
 
 ## Needs To Have
 - Resource Management (spare parts, warm clothes, food, money)
+- Trading
 - Random Unfortunate Events (getting hit by an asteroid maybe?)
 - Sprites
 - Music

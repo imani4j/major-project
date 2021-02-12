@@ -15,6 +15,8 @@ let partyMemberCount;
 let pace = "slow";
 let distanceTravelledToday;
 let totalDistanceTravelled;
+let textBoxInput;
+let button;
 
 // objects
 //    SpaceShip
@@ -87,14 +89,28 @@ let ailments = ["space snakebite", "dysentry", "space fever", "broken arm", "bro
 
 // setup + draw
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  // createCanvas(windowWidth, windowHeight);
+  // background(220);
+  setPartyMemberNames();
 }
 
 function draw() {
-  background(220);
 }
 
 // other functions
+function setPartyMemberNames() {
+  for (let member of party) {
+    textBoxInput = createInput("");
+  
+    button = createButton("Enter");
+    button.mousePressed(setName(member));
+  }
+}
+
+
+function setName(member) {
+  member.name = textBoxInput.value;
+}
 
 function isJourneyDone() {
   if (totalDistanceTravelled >= MILKYWAYLENGTH) {
@@ -145,7 +161,7 @@ function endRound() {
     console.log("party alive");
     decideDistanceTravelledEachRound();
     if(!isJourneyDone()) {
-      newRound;
+      newRound();
     }
   }
 }
@@ -376,4 +392,12 @@ function spaceShipCollisionHappens(typeOfCollision) {
 function anAccidentHappens(member, injury) {
   giveIllnessorInjury(member, injury);
   console.log("Uh oh, there was an accident! Now" + member + "has" + injury + ".");
+}
+
+function doesSpaceShipNeedRepairing() {
+  return spaceShip.condition === "needs repairing";
+}
+
+function repairSpaceShip() {
+
 }
