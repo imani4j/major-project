@@ -152,6 +152,7 @@ function endRound() {
 
 function countAlivePartyMembers() {
   partyMemberCount = 0;
+  alivePartyMembers = [];
   for (let member of party) {
     if (member.isAlive) {
       alivePartyMembers.push(member);
