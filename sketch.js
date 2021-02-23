@@ -89,12 +89,35 @@ let ailments = ["space snakebite", "dysentry", "space fever", "broken arm", "bro
 
 // setup + draw
 function setup() {
-  // createCanvas(windowWidth, windowHeight);
-  // background(220);
-  setPartyMemberNames();
+  createCanvas(windowWidth, windowHeight);
+  background(220);
+  // setPartyMemberNames();
 }
 
 function draw() {
+  displayScreen("title screen");
+}
+
+function displayScreen(kind) {
+  switch (kind){
+  case "title screen":
+    fill("black");
+    break;
+  case "EndGame":
+    fill("blue");
+    break;
+  case "management Screen":
+    fill("red");
+    break;
+  case "journey screen":
+  default:
+    fill("green");
+    break;
+  case "store":
+    fill("brown");
+    break;
+  }
+  rect(100, 100, 100, 100);
 }
 
 // other functions
