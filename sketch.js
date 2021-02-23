@@ -17,6 +17,8 @@ let distanceTravelledToday;
 let totalDistanceTravelled;
 let textBoxInput;
 let button;
+let titleScreenImg;
+let currentDisplay = 0;
 
 // objects
 //    SpaceShip
@@ -86,6 +88,12 @@ let alivePartyMembers = [];
 let notMoneyResourceArray = [food, spareSpaceSuits, spareParts, medicine];
 // conditions
 let ailments = ["space snakebite", "dysentry", "space fever", "broken arm", "broken leg", "an infected cut", "deadly space disease"];
+let displayArray = ["title screen", "naming screen", " EndGame", "management screen", "journey screen", "store"];
+
+// preloading assets
+function preload() {
+  titleScreenImg = loadImage("assets/Title Screen.png");
+}
 
 // setup + draw
 function setup() {
@@ -95,13 +103,18 @@ function setup() {
 }
 
 function draw() {
-  displayScreen("title screen");
+  displayScreen(displayArray[currentDisplay]);
 }
 
+
+// other functions
 function displayScreen(kind) {
   switch (kind){
   case "title screen":
-    fill("black");
+    displayTitleScreen();
+    break;
+  case "naming screen":
+    displayNamingScreen();
     break;
   case "EndGame":
     fill("blue");
@@ -115,19 +128,16 @@ function displayScreen(kind) {
     break;
   case "store":
     fill("brown");
+    rect(100, 100, 100, 100);
     break;
   }
-  rect(100, 100, 100, 100);
 }
 
-// other functions
-function setPartyMemberNames() {
-  for (let member of party) {
-    textBoxInput = createInput("");
+function setPartyMemberName(member) {
+  textBoxInput = createInput("");
   
-    button = createButton("Enter");
-    button.mousePressed(setName(member));
-  }
+  button = createButton("Enter");
+  button.mousePressed(setName(member));
 }
 
 
@@ -422,5 +432,37 @@ function doesSpaceShipNeedRepairing() {
 }
 
 function repairSpaceShip() {
+  if (spaceShip.condition === "needs repairing" && spareParts > 0) {
+    spareParts--;
+    spaceShip.condition = "fine";
+  }
+}
+
+// displays
+function displayTitleScreen() {
+  image(titleScreenImg, 0, 0, windowWidth, windowHeight);
+  // fill("white");
+  rect(250, 524, 250, 50);
+  fill("black");
+  textSize(28);
+  text("START", 325, 558);
+  if (mouseX > 250 && mouseX < 500 && mouseY > 524 && mouseY < 574) {
+    fill("red");
+    if (mouseIsPressed) {
+      currentDisplay = displayArray[1];
+      displayScreen(displayArray[1]);
+    }
+  }
+  else {
+    fill("white");
+  }
+}
+
+function displayNamingScreen() {
+  fill("black");
+  rect(0, 0, windowWidth, windowHeight);
+  for (let member of party) {
+    setPartyMemberName(member);
+  }
 
 }
