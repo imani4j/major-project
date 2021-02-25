@@ -15,12 +15,15 @@ let partyMemberCount;
 let pace = "slow";
 let distanceTravelledToday;
 let totalDistanceTravelled;
-let textBoxInput;
-let button;
 let titleScreenImg;
 let namingScreenImg;
 let currentDisplay = 0;
-let beforeNames = "yes";
+
+// Buttons
+// eslint-disable-next-line no-undef
+let startButton = new Clickable();
+// eslint-disable-next-line no-undef
+let nameButton = new Clickable();
 
 // objects
 //    SpaceShip
@@ -76,7 +79,7 @@ let memberFour = {
 };
 let memberFive = {
   health: 100,
-  name: "little jimmy",
+  name: "little timmy",
   isAlive: true,
   isSick: false,
   ailment: "none",
@@ -118,6 +121,9 @@ function displayScreen(kind) {
     break;
   case "naming screen":
     displayNamingScreen();
+    // setTimeout(() => {
+    //   namingTime();
+    // }, 2000);
     break;
   case "EndGame":
     fill("blue");
@@ -138,11 +144,6 @@ function displayScreen(kind) {
 
 function setPartyMemberName(member, num) {
   member.name = window.prompt("What's the name of party member #" + num + "?");
-}
-
-
-function setName(member) {
-  member.name = textBoxInput.value;
 }
 
 function isJourneyDone() {
@@ -442,20 +443,22 @@ function repairSpaceShip() {
 function displayTitleScreen() {
   image(titleScreenImg, 0, 0, windowWidth, windowHeight);
   // fill("white");
-  rect(250, 524, 250, 50);
-  fill("black");
-  textSize(28);
-  text("START", 325, 558);
-  if (mouseX > 250 && mouseX < 500 && mouseY > 524 && mouseY < 574) {
-    fill("red");
-    if (mouseIsPressed) {
-      currentDisplay = displayArray[1];
-      displayScreen(displayArray[1]);
-    }
-  }
-  else {
-    fill("white");
-  }
+  startButton.draw();
+  startButton.locate(250, 524);
+  startButton.resize(250, 50);
+  startButton.text = "START";
+  startButton.onOutside = function() {
+    startButton.color = "#FFFFFF";
+    startButton.textColor = "#000000";
+  };
+  startButton.onHover = function() {
+    startButton.color = "#FF0000";
+    startButton.textColor = "#FFFFFF";
+  };
+  startButton.onPress = function() {
+    currentDisplay = displayArray[1];
+    displayScreen(displayArray[1]);
+  };
 }
 
 function displayNamingScreen() {
@@ -464,25 +467,36 @@ function displayNamingScreen() {
   textSize(28);
   text("You're getting ready to set out for your long journey across the galaxy!", windowWidth/8, windowHeight/6* 3.5);
   text("You'll need to decide who's a part of your team.", windowWidth/8, windowHeight/6 * 4);
-  rect(windowWidth/8, windowHeight/6 * 4.2, 100, 50);
-  fill("black");
-  text("OK", windowWidth/8, windowHeight/6 * 4.5);
-  if (mouseX >= windowWidth/8 && mouseX < 500 && mouseY >= windowHeight/6 * 4.2 && mouseY < 500) {
-    console.log("i made it");
-    fill("blue");
-    if (mouseIsPressed) {
-      fill("blue");
-    }
-  }
-  else {
-    fill("white");
-  }
+  nameButton.draw();
+  nameButton.locate(500, 500);
+  nameButton.resize(250, 50);
+  nameButton.text = "OK";
+  nameButton.onOutside = function() {
+    nameButton.color = "#FFFFFF";
+    nameButton.textColor = "#000000";
+  };
+  nameButton.onHover = function() {
+    nameButton.color = "#FF0000";
+    nameButton.textColor = "#FFFFFF";
+  };
+  nameButton.onPress = function() {
+    namingTime();
+  };
 }
 
 function namingTime() {
   let num = 1;
   for (let member of party) {
     setPartyMemberName(member, num);
+    num++;
+  }
+  fill("white");
+  text("Your party is:", windowWidth/8, windowHeight/6 * 4.5);
+  let temp = 30;
+  num = 1;
+  for (let member of party) {
+    text(num + ". " + member.name, windowWidth/8, windowHeight/6 * 4.5 + temp);
+    temp += 30;
     num++;
   }
 }
