@@ -139,5 +139,5 @@ I could be nicer, but space is serious business, so just trying to continue with
 
 ## Trading
 
-When a player chooses to trade, they should get a random alien who eill offer some resource besides money for one of their resources besides money.
+When a player chooses to trade, they should get a random alien who will offer some resource besides money for one of their resources besides money.
 

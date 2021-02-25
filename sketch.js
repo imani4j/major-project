@@ -18,7 +18,9 @@ let totalDistanceTravelled;
 let textBoxInput;
 let button;
 let titleScreenImg;
+let namingScreenImg;
 let currentDisplay = 0;
+let beforeNames = "yes";
 
 // objects
 //    SpaceShip
@@ -93,6 +95,7 @@ let displayArray = ["title screen", "naming screen", " EndGame", "management scr
 // preloading assets
 function preload() {
   titleScreenImg = loadImage("assets/Title Screen.png");
+  namingScreenImg = loadImage("assets/Naming Screen.png");
 }
 
 // setup + draw
@@ -133,11 +136,8 @@ function displayScreen(kind) {
   }
 }
 
-function setPartyMemberName(member) {
-  textBoxInput = createInput("");
-  
-  button = createButton("Enter");
-  button.mousePressed(setName(member));
+function setPartyMemberName(member, num) {
+  member.name = window.prompt("What's the name of party member #" + num + "?");
 }
 
 
@@ -459,10 +459,30 @@ function displayTitleScreen() {
 }
 
 function displayNamingScreen() {
+  image(namingScreenImg, 0, 0, windowWidth, windowHeight);
+  fill("white");
+  textSize(28);
+  text("You're getting ready to set out for your long journey across the galaxy!", windowWidth/8, windowHeight/6* 3.5);
+  text("You'll need to decide who's a part of your team.", windowWidth/8, windowHeight/6 * 4);
+  rect(windowWidth/8, windowHeight/6 * 4.2, 100, 50);
   fill("black");
-  rect(0, 0, windowWidth, windowHeight);
-  for (let member of party) {
-    setPartyMemberName(member);
+  text("OK", windowWidth/8, windowHeight/6 * 4.5);
+  if (mouseX >= windowWidth/8 && mouseX < 500 && mouseY >= windowHeight/6 * 4.2 && mouseY < 500) {
+    console.log("i made it");
+    fill("blue");
+    if (mouseIsPressed) {
+      fill("blue");
+    }
   }
+  else {
+    fill("white");
+  }
+}
 
+function namingTime() {
+  let num = 1;
+  for (let member of party) {
+    setPartyMemberName(member, num);
+    num++;
+  }
 }
