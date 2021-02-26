@@ -9,21 +9,24 @@
 //   Constants
 const MILKYWAYLENGTH = 100000;
 //  not constants
-let money = 0;
+let money = 1600;
 let rationSize = "large";
 let partyMemberCount;
 let pace = "slow";
 let distanceTravelledToday;
 let totalDistanceTravelled;
+let currentDisplay = 0;
+let namesSet = false;
+let promptsDone = false;
+
+// images
 let titleScreenImg;
 let namingScreenImg;
-let currentDisplay = 0;
+let shopScreenImg;
 
 // Buttons
 // eslint-disable-next-line no-undef
 let startButton = new Clickable();
-// eslint-disable-next-line no-undef
-let nameButton = new Clickable();
 
 // objects
 //    SpaceShip
@@ -34,19 +37,19 @@ let spaceShip = {
 //   Resources
 let food = {
   amount: 0,
-  price: 50,
+  price: 5,
 };
 let spareSpaceSuits = {
   amount: 0,
-  price: 100,
+  price: 20,
 };
 let spareParts = {
   amount: 0,
-  price: 500,
+  price: 100,
 };
 let medicine = {
   amount: 0,
-  price: 0,
+  price: 20,
 };
 //  Party Members
 let memberOne = {
@@ -93,12 +96,13 @@ let alivePartyMembers = [];
 let notMoneyResourceArray = [food, spareSpaceSuits, spareParts, medicine];
 // conditions
 let ailments = ["space snakebite", "dysentry", "space fever", "broken arm", "broken leg", "an infected cut", "deadly space disease"];
-let displayArray = ["title screen", "naming screen", " EndGame", "management screen", "journey screen", "store"];
+let displayArray = ["title screen", "naming screen", "store", "management screen", "journey screen", "EndGame"];
 
 // preloading assets
 function preload() {
   titleScreenImg = loadImage("assets/Title Screen.png");
   namingScreenImg = loadImage("assets/Naming Screen.png");
+  shopScreenImg = loadImage("assets/Alien Icon.png");
 }
 
 // setup + draw
@@ -121,12 +125,13 @@ function displayScreen(kind) {
     break;
   case "naming screen":
     displayNamingScreen();
-    // setTimeout(() => {
-    //   namingTime();
-    // }, 2000);
+    if (namesSet === false) {
+      namingTime();
+    }
     break;
   case "EndGame":
     fill("blue");
+    rect(100, 100, 100, 100);
     break;
   case "management Screen":
     fill("red");
@@ -136,8 +141,13 @@ function displayScreen(kind) {
     fill("green");
     break;
   case "store":
-    fill("brown");
-    rect(100, 100, 100, 100);
+    displayShopScreen();
+    if (promptsDone === false) {
+      setTimeout(() => {
+        initialPurchases();
+      }, 1000);
+      promptsDone = true;
+    }
     break;
   }
 }
@@ -332,7 +342,7 @@ function makeADumbMistake() {
   let tempResourceArray = [money, food, spareSpaceSuits, spareParts, medicine]; 
   let tempResource;
   let tempResourceAmountLost;
-  let numOfLightYearsLost;
+  // let numOfLightYearsLost;
   let thatMember = random(alivePartyMembers);
   switch (mistake) {
   case "left door open":
@@ -442,7 +452,7 @@ function repairSpaceShip() {
 // displays
 function displayTitleScreen() {
   image(titleScreenImg, 0, 0, windowWidth, windowHeight);
-  // fill("white");
+  fill("white");
   startButton.draw();
   startButton.locate(250, 524);
   startButton.resize(250, 50);
@@ -456,47 +466,66 @@ function displayTitleScreen() {
     startButton.textColor = "#FFFFFF";
   };
   startButton.onPress = function() {
-    currentDisplay = displayArray[1];
+    currentDisplay = 1;
     displayScreen(displayArray[1]);
   };
 }
 
 function displayNamingScreen() {
   image(namingScreenImg, 0, 0, windowWidth, windowHeight);
+  sleep(1000);
   fill("white");
   textSize(28);
   text("You're getting ready to set out for your long journey across the galaxy!", windowWidth/8, windowHeight/6* 3.5);
-  text("You'll need to decide who's a part of your team.", windowWidth/8, windowHeight/6 * 4);
-  nameButton.draw();
-  nameButton.locate(500, 500);
-  nameButton.resize(250, 50);
-  nameButton.text = "OK";
-  nameButton.onOutside = function() {
-    nameButton.color = "#FFFFFF";
-    nameButton.textColor = "#000000";
-  };
-  nameButton.onHover = function() {
-    nameButton.color = "#FF0000";
-    nameButton.textColor = "#FFFFFF";
-  };
-  nameButton.onPress = function() {
-    namingTime();
-  };
+  text("Now, who's a part of your team?", windowWidth/8, windowHeight/6 * 4);
+}
+
+function displayShopScreen() {
+  image(shopScreenImg, 0, 0, windowWidth, windowHeight);
 }
 
 function namingTime() {
-  let num = 1;
-  for (let member of party) {
-    setPartyMemberName(member, num);
-    num++;
+  setPartyMemberName(memberOne, 1);
+  setPartyMemberName(memberTwo, 2);
+  setPartyMemberName(memberThree, 3);
+  setPartyMemberName(memberFour, 4);
+  setPartyMemberName(memberFive, 5);
+  window.alert("Your party is: " + memberOne.name + ", " + memberTwo.name + ", " + memberThree.name + ", " + memberFour.name + ", and " + memberFive.name + ".");
+  namesSet = true;
+  currentDisplay = 2;
+  displayScreen(currentDisplay);
+}
+
+function initialPurchases() {
+  let quantity = window.prompt("You have " + money + "$. How much food do you want to buy? A pound costs 5$. (Recommended: at least 1800 pounds)");
+  if (quantity === null || quantity < 0) {
+    quantity = 0;
   }
-  fill("white");
-  text("Your party is:", windowWidth/8, windowHeight/6 * 4.5);
-  let temp = 30;
-  num = 1;
-  for (let member of party) {
-    text(num + ". " + member.name, windowWidth/8, windowHeight/6 * 4.5 + temp);
-    temp += 30;
-    num++;
+  purchaseResources(food, quantity);
+  let quantity2 = window.prompt("You have " + money + "$.How many extra space suits do you want to buy? 20$ for 1. (Recommended: at least 5)");
+  if (quantity2 === null || quantity2 < 0) {
+    quantity2 = 0;
   }
+  purchaseResources(spareSpaceSuits, quantity2);
+  let quantity3 = window.prompt("You have " + money + "$.How many spare parts do you want to buy for your spaceship? 100$ for 1. (Recommended: at least 2)");
+  if (quantity3 === null || quantity3 < 0) {
+    quantity3 = 0;
+  }
+  purchaseResources(food, quantity3);
+  let quantity4 = window.prompt("You have " + money + "$. How much medicine do you want to buy? 20$ for 1. (HIGHLY RECOMMENDED: at the very minimum 5)");
+  if (quantity4 === null || quantity4 < 0) {
+    quantity4 = 0;
+  }
+  purchaseResources(medicine, quantity4);
+  promptsDone = true;
+  currentDisplay = 0;
+  displayScreen(displayArray[currentDisplay]);
+}
+
+function sleep(milliseconds) {
+  const date = Date.now();
+  let currentDate = null;
+  do {
+    currentDate = Date.now();
+  } while (currentDate - date < milliseconds);
 }
