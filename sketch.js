@@ -1,18 +1,34 @@
 // The Milky Way but its only the hunting minigame
 // Imani Fodje
+// Cow and Alien Sprites by Kayla Fodje
 // 2/9/21
 //
 // Extra for Experts:
-// - describe what you did to take this project "above and beyond"
+// does all the time i spent on my original idea count
 
 // global variables
 //   Constants
+const HALFSIZE = 20;
+// eslint-disable-next-line no-undef
+let startButton = new Clickable();
 
 //  not constants
+let cow1Img;
+let cow2Img;
+let alien1Img;
+let alien2Img;
+let alien3Img;
+let alien4Img;
+let titleScreenImg;
+let currentDisplay = 0;
+let waitTime = 2000;
+let lastSpawnTime = 0;
 
 // Arrays
 let theBullets = [];
 let theSpaceCows = [];
+let displayArray = ["title screen", "game"];
+
 
 // Objects
 let player = {
@@ -20,17 +36,14 @@ let player = {
   y:0,
   speed:1,
   direction: "up",
-  wid: 50,
-  hei: 50,
+  wid: 30,
+  hei: 30,
 };
-// let bullet = {
-//   x: 0,
-//   y: 0,
-//   speed:10,
-//   direction: player.direction, 
-// };
 
 // preload + setup + draw
+function preload() {
+  titleScreenImg = loadImage("assets/Title Screen.png");
+}
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -40,91 +53,12 @@ function setup() {
 }
 
 function draw() {
-  background(225);
+  background("green");
   rectMode(CENTER);
-  rect(player.x, player.y, player.wid, player.hei);
-  movePlayer();
-  ifPlayerHitWall();
-  displayBullet();
-  moveBullet();
-  ifBulletHitWall();
-  displaySpaceCow();
-  moveSpaceCow();
-  spaceCowChangeDirection();
-  spaceCowShot();
-}
-
-// Classes
-// class Bullet {
-//   constructor(x, y, radius, direction) {
-//     this.x = x;
-//     this.y = y;
-//     this.radius = radius;
-//     this.direction = direction;
-//     this.someColor = "black";
-//     this.dx = 5;
-//     this.dy = 5;
-//     // this.direction = "up";
-//     this.isAlive = true;
-//   }
-
-//   display() {
-//     ellipse(this.x, this.y, this.radius*2, this.radius*2);
-//     fill(this.someColor);
-//   }
-
-//   move(direction) {
-//     switch (direction) {
-//     default:
-//     case "up":
-//       this.dx = 0;
-//       this.dy = -5;
-//       break;
-//     case "left":
-//       this.dx = -5;
-//       this.dy = 0;
-//       break;
-//     case "down":
-//       this.dx = 0;
-//       this.dy = 5;
-//       break;
-//     case "right":
-//       this.dx = 5;
-//       this.dy = 0;
-//       break;
-//     }
-//     this.x += this.dx;
-//     this.y += this.dy;
-//   }
-
-//   // didShotLand() {
-
-//   // }
-// }
-
-class SpaceCow {
-  constructor(x, y, w, h) {
-    this.x = x;
-    this.y = y;
-    this.w = w;
-    this.h = h;
-    this.dx = 5;
-    this.dy = 5;
-  }
-
-  display() {
-    noStroke();
-    fill("white");
-    rect(this.x, this.y, this.w, this.h);
-  }
-
-  didItGetHit() {
-
-  }
+  titleOrGame(displayArray[currentDisplay]);
 }
 
 // functions
-
 function movePlayer() {
   if (keyIsDown(87) || keyIsDown(38)) { // key "w" & ^
     player.y -= player.speed;
@@ -183,7 +117,7 @@ function ifBulletHitWall() {
 function keyPressed() {
   if (keyCode === 32) {
     makeBullet();
-    spawnSpaceCow();
+
   }
 }
 
@@ -195,7 +129,8 @@ function makeBullet() {
     dy: 5,
     speed: 10,
     direction: player.direction,
-    size: 5, 
+    size: 5,
+    isAlive: true,
   };
   theBullets.push(bullet);
 }
@@ -235,24 +170,53 @@ function displayBullet() {
 }
 
 function spawnSpaceCow() {
-  let mooMooCow = {
-    x: 100,
-    y: 100,
-    dx: 0,
-    dy: 0,
-    size: 100,
-    isAlive: true,
-  };
-  theSpaceCows.push(mooMooCow);
+  if (millis() - lastSpawnTime > waitTime) {
+    let spaceCow = {
+      x: random(HALFSIZE, width-HALFSIZE),
+      y: random(HALFSIZE, height-HALFSIZE),
+      dx: random(-5, 5),
+      dy: random(-5, 5),
+      size: HALFSIZE*2,
+      isAlive: true,
+    };
+    theSpaceCows.push(spaceCow);
+    lastSpawnTime = millis();
+  }
 }
 
 function displaySpaceCow() {
-  for (let moomoo of theSpaceCows) {
-    noStroke();
-    fill("red");
-    rect(moomoo.x, moomoo.y, moomoo.size, moomoo.size);
+  if (theSpaceCows.length > 0) {
+    for (let i=0; i<theSpaceCows.length; i++) {
+      if (theSpaceCows[i].isAlive) {
+        noStroke();
+        fill("red");
+        rect(theSpaceCows[i].x, theSpaceCows[i].y, theSpaceCows[i].size, theSpaceCows[i].size);
+      }
+    }
   }
 }
+
+function ifCowHitWall() {
+  for (let spaceCow of theSpaceCows) {
+    if (spaceCow.x + HALFSIZE > width + HALFSIZE) {
+      spaceCow.x = width - HALFSIZE;
+      theSpaceCows.splice(spaceCow);
+    }
+    if (spaceCow.x - HALFSIZE < 0 - HALFSIZE) {
+      spaceCow.x = 0 + HALFSIZE;
+      theSpaceCows.splice(spaceCow);
+    }
+    if (spaceCow.y + HALFSIZE > height + HALFSIZE) {
+      spaceCow.y = height - HALFSIZE;
+      theSpaceCows.splice(spaceCow);
+    }
+    if (spaceCow.y - HALFSIZE < 0 - HALFSIZE) {
+      spaceCow.y = 0 + HALFSIZE;
+      theSpaceCows.splice(spaceCow);
+    }
+  }
+}
+
 
 function moveSpaceCow() {
   for (let spaceCow of theSpaceCows) {
@@ -261,37 +225,74 @@ function moveSpaceCow() {
   }
 }
 
-function spaceCowChangeDirection() {
-  let waitTime = 5000;
-  let lastSwitchTime = 0;
-  if (millis() - lastSwitchTime > waitTime) {
-    for (let spaceCow of theSpaceCows) {
-      if (spaceCow.isAlive) {
-        spaceCow.dx = 5;
-        spaceCow.dy = 5;
+function spaceCowShot() {
+  for (let i=theSpaceCows.length-1; i>=0; i--) {
+    // if (theSpaceCows[i].isAlive) {
+    for (let j=theBullets.length-1; j>=0; j--) {
+      if (theBullets[j].x < theSpaceCows[i].x + HALFSIZE &&
+          theBullets[j].x > theSpaceCows[i].x - HALFSIZE &&
+          theBullets[j].y < theSpaceCows[i].y + HALFSIZE &&
+          theBullets[j].y > theSpaceCows[i].y - HALFSIZE) {
+        theSpaceCows[i].isAlive = false;
+        theBullets[j].isAlive = false;
+        theSpaceCows.splice(i, 1);
+        theBullets.splice(j, 1);
+        break;
       }
-      else {
-        spaceCow.dx = 0;
-        spaceCow.dy = 0;
-      }
+      // }
     }
-    lastSwitchTime = millis();
   }
 }
 
-function spaceCowShot() {
-  for (let moo of theSpaceCows) {
-    for (let bullet of theBullets) {
-      if ((bullet.x-bullet.wid < moo.x + moo.size || bullet.x+bullet.wid > moo.x - moo.size) && (bullet.y-bullet.hei < moo.y + moo.size || bullet.y+bullet.hei > moo.y - moo.size)) {
-        moo.isALice = false;
-        theSpaceCows.splice(moo);
-        theBullets.splice(bullet);
-      }
-      if (bullet.y-bullet.hei < moo.y + moo.size || bullet.y+bullet.hei > moo.y - moo.size) {
-        moo.isALice = false;
-        theSpaceCows.splice(moo);
-        theBullets.splice(bullet);
-      }
-    }
+function displayGame() {
+  rectMode(CENTER);
+  movePlayer();
+  ifPlayerHitWall();
+  moveBullet();
+  ifBulletHitWall();
+  spaceCowShot();
+  moveSpaceCow();
+  ifCowHitWall();
+  spawnSpaceCow();
+  displayPlayer();
+  displayBullet();
+  displaySpaceCow();
+}
+
+function displayPlayer() {
+  fill("white");
+  rect(player.x, player.y, player.wid, player.hei);
+}
+
+function titleOrGame(what) {
+  switch (what) {
+  case "title screen":
+    displayTitleScreen();
+    break;
+  case "game":
+    displayGame();
+    break;
   }
+}
+
+function displayTitleScreen() {
+  rectMode(CORNER);
+  image(titleScreenImg, 0, 0, windowWidth, windowHeight);
+  fill("white");
+  startButton.draw();
+  startButton.locate(windowWidth/8, windowHeight/8*6);
+  startButton.resize(250, 50);
+  startButton.text = "START";
+  startButton.onOutside = function() {
+    startButton.color = "#FFFFFF";
+    startButton.textColor = "#000000";
+  };
+  startButton.onHover = function() {
+    startButton.color = "#FF0000";
+    startButton.textColor = "#FFFFFF";
+  };
+  startButton.onPress = function() {
+    currentDisplay = 1;
+    titleOrGame(displayArray[currentDisplay]);
+  };
 }
