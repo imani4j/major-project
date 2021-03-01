@@ -22,4 +22,4 @@ I completed everything on my new needs list, and some things on my nice to have 
 - Different difficulty levels
 - 24 different "levels" (weeks that you have to provide food until they arrive at earth)
 - ~Self-made assets (sprites, as well as sound effects and music)~ ~(very good chance at least some of this will be achieved)~
-i made moo sound effects, little sis made sprites, rest were from opengameart
+i made moo sound effects and the title screen (as well as the unused assets), little sis made sprites, rest were from opengameart
