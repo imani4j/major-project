@@ -1,10 +1,11 @@
 // The Milky Way but its only the hunting minigame
 // Imani Fodje
-// Cow and Alien Sprites by Kayla Fodje
+// 3/1/2021
+// title screen and unused naming screen by Imani Fodje
+// Cow and Alien Sprites by Kayla Fodje (cow sprite present in title screen)
 // BG MUSIC BY Fupi
 // sound affects by MedicineStorm at http://superpowers-html5.com/ 
-// Moo sounds made with Eleanor Forte Lite (Synthesizer V Studio Basic)
-// 2/9/21
+// Moo sounds made with Eleanor Forte Lite (Synthesizer V Studio Basic) (legally need this here)
 //
 // Extra for Experts:
 // does all the time i spent on my original idea count
