@@ -11,12 +11,12 @@ This game will feature aliens travelling through the Milky Way to get to Earth. 
 - Bullets
 - Prey
 - Hitboxes
-- A score system
 - Sprites
 - Music
-- Having to hunt enough to feed your party for the week (if you do not succeed, party health goes down)
 
 ## Nice To Have
+- A score System
+- Having to hunt enough to feed your party for the week (if you do not succeed, party health goes down)
 - Different difficulty levels
 - 24 different "levels" (weeks that you have to provide food until they arrive at earth)
 - Self-made assets (sprites, as well as sound effects and music) (very good chance at least some of this will be achieved)

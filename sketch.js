@@ -1,10 +1,14 @@
 // The Milky Way but its only the hunting minigame
 // Imani Fodje
 // Cow and Alien Sprites by Kayla Fodje
+// BG MUSIC BY Fupi
+// sound affects by MedicineStorm at http://superpowers-html5.com/ 
+// Moo sounds made with Eleanor Forte Lite (Synthesizer V Studio Basic)
 // 2/9/21
 //
 // Extra for Experts:
 // does all the time i spent on my original idea count
+// i made the cows moo
 
 // global variables
 //   Constants
@@ -23,12 +27,17 @@ let titleScreenImg;
 let currentDisplay = 0;
 let waitTime = 2000;
 let lastSpawnTime = 0;
+let bgMusic;
+let sound1;
+let moo1;
+let moo2;
+let moo3;
 
 // Arrays
 let theBullets = [];
 let theSpaceCows = [];
 let displayArray = ["title screen", "game"];
-
+let mooMooCowArray = [1, 2];
 
 // Objects
 let player = {
@@ -43,12 +52,24 @@ let player = {
 // preload + setup + draw
 function preload() {
   titleScreenImg = loadImage("assets/Title Screen.png");
+  alien1Img = loadImage("assets/alienspriteback.png");
+  alien2Img = loadImage("assets/alienspritefront.png");
+  alien3Img = loadImage("assets/alienspriteleft.png");
+  alien4Img = loadImage("assets/alienspriteright.png");
+  cow1Img = loadImage("assets/cowsprite.png");
+  cow2Img = loadImage("assets/cowsprite2.png");
+  bgMusic = loadSound("assets/wackyworkings.wav");
+  sound1 = loadSound("assets/3.wav");
+  moo1 = loadSound("assets/moomoocow1.wav");
+  moo2 = loadSound("assets/moomoocow2.wav");
+  moo3 = loadSound("assets/moomoocow3.wav");
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   player.x = width/2;
   player.y = height/2;
+  bgMusic.loop();
 
 }
 
@@ -133,6 +154,7 @@ function makeBullet() {
     isAlive: true,
   };
   theBullets.push(bullet);
+  sound1.play();
 }
 
 function moveBullet() {
@@ -181,6 +203,13 @@ function spawnSpaceCow() {
     };
     theSpaceCows.push(spaceCow);
     lastSpawnTime = millis();
+    let theMoo = random(mooMooCowArray);
+    if (theMoo === 1) {
+      moo1.play();
+    }
+    else {
+      moo2.play();
+    }
   }
 }
 
@@ -188,9 +217,13 @@ function displaySpaceCow() {
   if (theSpaceCows.length > 0) {
     for (let i=0; i<theSpaceCows.length; i++) {
       if (theSpaceCows[i].isAlive) {
-        noStroke();
-        fill("red");
-        rect(theSpaceCows[i].x, theSpaceCows[i].y, theSpaceCows[i].size, theSpaceCows[i].size);
+        imageMode(CENTER);
+        if (theSpaceCows[i].dx > 0) {
+          image(cow1Img, theSpaceCows[i].x, theSpaceCows[i].y, theSpaceCows[i].size*2, theSpaceCows[i].size*2);
+        }
+        else {
+          image(cow2Img, theSpaceCows[i].x, theSpaceCows[i].y, theSpaceCows[i].size*2, theSpaceCows[i].size*2);
+        }
       }
     }
   }
@@ -227,7 +260,6 @@ function moveSpaceCow() {
 
 function spaceCowShot() {
   for (let i=theSpaceCows.length-1; i>=0; i--) {
-    // if (theSpaceCows[i].isAlive) {
     for (let j=theBullets.length-1; j>=0; j--) {
       if (theBullets[j].x < theSpaceCows[i].x + HALFSIZE &&
           theBullets[j].x > theSpaceCows[i].x - HALFSIZE &&
@@ -237,9 +269,9 @@ function spaceCowShot() {
         theBullets[j].isAlive = false;
         theSpaceCows.splice(i, 1);
         theBullets.splice(j, 1);
+        moo3.play();
         break;
       }
-      // }
     }
   }
 }
@@ -254,14 +286,28 @@ function displayGame() {
   moveSpaceCow();
   ifCowHitWall();
   spawnSpaceCow();
-  displayPlayer();
+  displayPlayer(player.direction);
   displayBullet();
   displaySpaceCow();
 }
 
-function displayPlayer() {
-  fill("white");
-  rect(player.x, player.y, player.wid, player.hei);
+function displayPlayer(direction) {
+  imageMode(CENTER);
+  switch (direction) {
+  case "up":
+    image(alien1Img, player.x, player.y, player.wid*4, player.hei*4);
+    break;
+  case "down":
+  default:
+    image(alien2Img, player.x, player.y, player.wid*4, player.hei*4);
+    break;
+  case "left":
+    image(alien3Img, player.x, player.y, player.wid*4, player.hei*4);
+    break;
+  case "right":
+    image(alien4Img, player.x, player.y, player.wid*4, player.hei*4);
+    break;
+  }
 }
 
 function titleOrGame(what) {
