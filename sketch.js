@@ -32,6 +32,7 @@ let sound1;
 let moo1;
 let moo2;
 let moo3;
+let score=0;
 
 // Arrays
 let theBullets = [];
@@ -118,19 +119,19 @@ function ifBulletHitWall() {
   for (let bullet of theBullets) {
     if (bullet.x + bullet.size/2 > width) {
       bullet.x = width - bullet.size/2;
-      theBullets.splice(bullet);
+      theBullets.splice(bullet, 1);
     }
     if (bullet.x - bullet.size/2 < 0) {
       bullet.x = 0 + bullet.size/2;
-      theBullets.splice(bullet);
+      theBullets.splice(bullet, 1);
     }
     if (bullet.y + bullet.size/2 > height) {
       bullet.y = height - bullet.size/2;
-      theBullets.splice(bullet);
+      theBullets.splice(bullet, 1);
     }
     if (bullet.y - bullet.size/2 < 0) {
       bullet.y = 0 + bullet.size/2;
-      theBullets.splice(bullet);
+      theBullets.splice(bullet, 1);
     }
   }
 }
@@ -163,18 +164,18 @@ function moveBullet() {
     default:
     case "up":
       bullet.dx = 0;
-      bullet.dy = -5;
+      bullet.dy = -10;
       break;
     case "left":
-      bullet.dx = -5;
+      bullet.dx = -10;
       bullet.dy = 0;
       break;
     case "down":
       bullet.dx = 0;
-      bullet.dy = 5;
+      bullet.dy = 10;
       break;
     case "right":
-      bullet.dx = 5;
+      bullet.dx = 10;
       bullet.dy = 0;
       break;
     }
@@ -233,19 +234,19 @@ function ifCowHitWall() {
   for (let spaceCow of theSpaceCows) {
     if (spaceCow.x + HALFSIZE > width + HALFSIZE) {
       spaceCow.x = width - HALFSIZE;
-      theSpaceCows.splice(spaceCow);
+      theSpaceCows.splice(spaceCow, 1);
     }
     if (spaceCow.x - HALFSIZE < 0 - HALFSIZE) {
       spaceCow.x = 0 + HALFSIZE;
-      theSpaceCows.splice(spaceCow);
+      theSpaceCows.splice(spaceCow, 1);
     }
     if (spaceCow.y + HALFSIZE > height + HALFSIZE) {
       spaceCow.y = height - HALFSIZE;
-      theSpaceCows.splice(spaceCow);
+      theSpaceCows.splice(spaceCow, 1);
     }
     if (spaceCow.y - HALFSIZE < 0 - HALFSIZE) {
       spaceCow.y = 0 + HALFSIZE;
-      theSpaceCows.splice(spaceCow);
+      theSpaceCows.splice(spaceCow, 1);
     }
   }
 }
@@ -269,6 +270,7 @@ function spaceCowShot() {
         theBullets[j].isAlive = false;
         theSpaceCows.splice(i, 1);
         theBullets.splice(j, 1);
+        score++;
         moo3.play();
         break;
       }
@@ -289,6 +291,7 @@ function displayGame() {
   displayPlayer(player.direction);
   displayBullet();
   displaySpaceCow();
+  displayScore();
 }
 
 function displayPlayer(direction) {
@@ -341,4 +344,10 @@ function displayTitleScreen() {
     currentDisplay = 1;
     titleOrGame(displayArray[currentDisplay]);
   };
+}
+
+function displayScore() {
+  fill("white");
+  textSize(25);
+  text("Score:" + score, 20, 20);
 }
